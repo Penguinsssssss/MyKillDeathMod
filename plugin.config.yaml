@@ -1,0 +1,13 @@
+# Plugin configuration for MyKillDeathMod
+
+mod:
+  name: MyKillDeathMod
+  version: 1.0.0
+  debug: false
+
+settings:
+  displayGUI: true
+  guiPosition:
+    x: 100
+    y: 50
+  resetStatsOnNewGame: true

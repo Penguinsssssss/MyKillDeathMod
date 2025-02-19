@@ -6,17 +6,28 @@ namespace MyKillDeathMod
     /// <summary>
     /// Handles displaying the kill/death statistics GUI in the game.
     /// </summary>
-    public class KillDeathGUI
+    public class KillDeathGUI : MonoBehaviour
     {
-        private bool showGUI = true; // Toggle GUI visibility
+        private bool showGUI = false; // Initially hidden
+
+        /// <summary>
+        /// Checks for input to toggle the GUI.
+        /// </summary>
+        private void Update()
+        {
+            // Detect tilde (~) key press
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                showGUI = !showGUI;
+            }
+        }
 
         /// <summary>
         /// Renders the kill/death scoreboard.
         /// </summary>
-        /// <param name="tracker">The KillDeathTracker containing player stats.</param>
-        public void Render(KillDeathTracker tracker)
+        private void OnGUI()
         {
-            if (!showGUI || tracker == null) return;
+            if (!showGUI) return;
 
             // Define GUI box position & size
             Rect windowRect = new Rect(50, 50, 300, 300);
@@ -29,6 +40,10 @@ namespace MyKillDeathMod
             GUILayout.Label("Player      | Kills | Deaths");
             GUILayout.Label("----------------------------");
 
+            // Get the tracker instance (assuming it exists in the scene)
+            KillDeathTracker tracker = FindObjectOfType<KillDeathTracker>();
+            if (tracker == null) return;
+
             // Display each player's stats
             foreach (KeyValuePair<string, KillDeathTracker.PlayerStats> entry in tracker.Stats)
             {
@@ -36,12 +51,6 @@ namespace MyKillDeathMod
             }
 
             GUILayout.EndArea();
-
-            // Toggle button
-            if (GUI.Button(new Rect(50, 360, 100, 30), "Toggle Stats"))
-            {
-                showGUI = !showGUI;
-            }
         }
     }
 }

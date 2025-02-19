@@ -4,6 +4,6 @@
   "website_url": "https://github.com/YourUsername/MyKillDeathMod",
   "description": "Displays a GUI showing each player's kill/death in the lobby. Compatible with RoundsWithFriends.",
   "dependencies": [
-    "RoundsWithFriends >=1.0.0"
+    "RoundsWithFriends >=2.2.2"
   ]
 }

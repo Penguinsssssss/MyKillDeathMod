@@ -1,55 +1,58 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace MyKillDeathMod
 {
     /// <summary>
     /// Tracks kill and death statistics for players.
     /// </summary>
-    public class KillDeathTracker
+    public class KillDeathTracker : MonoBehaviour
     {
-        // Internal dictionary to store player stats keyed by player name.
-        private Dictionary<string, PlayerStats> _stats = new Dictionary<string, PlayerStats>();
+        // Dictionary to store player stats, keyed by playerID (unique per player)
+        private Dictionary<int, PlayerStats> _stats = new Dictionary<int, PlayerStats>();
 
         /// <summary>
         /// Called when a player gets a kill.
         /// </summary>
-        /// <param name="player">The player who made the kill.</param>
-        public void OnPlayerKill(Player player)
+        /// <param name="killer">The player who made the kill.</param>
+        public void OnPlayerKill(Player killer)
         {
-            if (player == null)
-                return;
+            if (killer == null) return;
+
+            int playerID = killer.playerID;
 
             // Ensure the player is added to the dictionary.
-            if (!_stats.ContainsKey(player.Name))
+            if (!_stats.ContainsKey(playerID))
             {
-                _stats[player.Name] = new PlayerStats();
+                _stats[playerID] = new PlayerStats();
             }
 
             // Increment kill count.
-            _stats[player.Name].Kills++;
+            _stats[playerID].Kills++;
         }
 
         /// <summary>
         /// Called when a player dies.
         /// </summary>
-        /// <param name="player">The player who died.</param>
-        public void OnPlayerDeath(Player player)
+        /// <param name="victim">The player who died.</param>
+        public void OnPlayerDeath(Player victim)
         {
-            if (player == null)
-                return;
+            if (victim == null) return;
+
+            int playerID = victim.playerID;
 
             // Ensure the player is added to the dictionary.
-            if (!_stats.ContainsKey(player.Name))
+            if (!_stats.ContainsKey(playerID))
             {
-                _stats[player.Name] = new PlayerStats();
+                _stats[playerID] = new PlayerStats();
             }
 
             // Increment death count.
-            _stats[player.Name].Deaths++;
+            _stats[playerID].Deaths++;
         }
 
         /// <summary>
-        /// Resets all players' kill/death statistics.
+        /// Resets all players' kill/death statistics at the start of a new game.
         /// </summary>
         public void ResetStats()
         {
@@ -59,7 +62,7 @@ namespace MyKillDeathMod
         /// <summary>
         /// Gets a read-only dictionary of all player statistics.
         /// </summary>
-        public IReadOnlyDictionary<string, PlayerStats> Stats => _stats;
+        public IReadOnlyDictionary<int, PlayerStats> Stats => _stats;
 
         /// <summary>
         /// Represents the kill/death statistics for a player.
@@ -75,20 +78,6 @@ namespace MyKillDeathMod
                 Deaths = 0;
             }
         }
-    }
-}
-
-// -----------------------------------------------------------------
-// IMPORTANT: The following is a placeholder for the Player class.
-// In your actual mod, the Player class should come from the game's API.
-// -----------------------------------------------------------------
-public class Player
-{
-    public string Name { get; set; }
-
-    public Player(string name)
-    {
-        Name = name;
     }
 }
 
